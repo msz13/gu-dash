@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>NEventStore.Domain</id>
+    <version>$version$</version>
+    <title>NEventStore Domain</title>
+    <authors>NEventStore Dev Team</authors>
+    <owners>NEventStore Dev Team</owners>
+    <projectUrl>http://neventstore.org</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A recipe for implementing event sourced domain objects with NEventStore.</description>
+    <summary>A recipe for implementing event sourced domain objects with NEventStore.</summary>
+    <language>es-US</language>
+    <tags>events, event sourcing, cqrs, storage, persistence, database, ddd, domain</tags>
+    <!-- 
+    Until this is on develop branch, this version should be the previous version, so it made it compatible
+	  with pre-release of the actual version. Ex, if we are on 6.0.0 unstable, dependency from NEventStore should
+	  be latest stable version so it can take prerelease of 6.0.0 version.
+	  With (5.4 we are telling NuGet that we need a version greater than 5.4 so we are allowing all the prerelease
+	  6.x.x versions
+	  -->
+    <dependencies>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="NEventStore" version="[7.0.0,8.0.0)" exclude="Build,Analyzers"/>
+      </group>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="NEventStore" version="[7.0.0,8.0.0)" exclude="Build,Analyzers"/>
+      </group>
+    </dependencies>
+  </metadata>  
+  <files>
+    <!--<file src="bin\$configuration$\**" target="lib"/>-->
+    <file src="..\NEventStore.Domain\bin\$configuration$\**\NEventStore.Domain.dll" target="lib"/>
+  </files>  
+</package>

@@ -1,0 +1,1 @@
+﻿{"Competence":{"Id":"a1432544-1334-4aaf-b770-ebdfd2a83203"},"Learner":{"id":"8fddf6d8-0cc9-4382-948a-b6880e222788"},"EventVersion":0}

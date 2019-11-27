@@ -1,0 +1,47 @@
+interface MutationResponse {
+    success: Boolean
+}
+
+type Query {
+    competences: [Competence]
+}
+
+type Mutation {
+    createCompetence(createCompetenceInput: CreateCompetenceDTO): CreateCompetenceResponse
+    
+}
+
+
+type Competence {
+
+        competenceId: ID
+
+        """
+        unique name
+        """
+        name: String! 
+
+        description: String 
+
+        isRequired: Boolean!
+
+        numberOfActiveGoals: Int! 
+
+        numberOfHoldedGoals:  Int!
+
+        numberOfDoneGoals: Int!
+}
+
+input CreateCompetenceDTO {
+
+        name: String!
+
+        description: String 
+
+        isRequired: Boolean!
+}
+
+type CreateCompetenceResponse implements MutationResponse {
+    success: Boolean
+    competence: Competence
+}

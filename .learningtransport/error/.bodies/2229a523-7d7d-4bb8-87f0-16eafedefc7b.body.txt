@@ -1,0 +1,1 @@
+﻿{"Name":"Sprawność","Description":"fizyczna","IsRequired":true,"EventVersion":0,"CompetenceId":"baa3ea80-3e6b-4104-8bee-038e59ce0fe9","LearnerId":"562f4f42-4e32-45d8-aade-f2d4ebafdc7f"}

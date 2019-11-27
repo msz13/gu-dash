@@ -1,0 +1,1 @@
+﻿{"CompetenceId":{"Id":"7fbcfc8a-10df-48e8-99fb-5519cea4b4e6"},"LearnerId":"7fd41ca8-cae6-415d-b827-ea518eb36c68","Name":"Sprawność","Description":"fizyczna","IsRequired":true,"EventVersion":0}
