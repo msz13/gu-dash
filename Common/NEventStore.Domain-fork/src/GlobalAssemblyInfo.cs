@@ -9,8 +9,8 @@ using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyCompany("NEventStore")]
-[assembly: AssemblyProduct("NEventStore")]
+[assembly: AssemblyCompany("msz13")]
+[assembly: AssemblyProduct("GuDash.Common")]
 [assembly: AssemblyCopyright("Copyright � Jonathan Oliver, Jonathan Mathius, Damian Hickey and Contributors 2011-2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyConfiguration("")]

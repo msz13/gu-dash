@@ -11,7 +11,7 @@ namespace NEventStore.Domain.Core
 
 		private readonly bool throwOnApplyNotFound;
 
-		private IAggregate registered;
+		private Domain.IAggregate registered;
 
 		public ConventionEventRouter()
 			: this(true)
@@ -22,7 +22,7 @@ namespace NEventStore.Domain.Core
 			this.throwOnApplyNotFound = throwOnApplyNotFound;
 		}
 
-		public ConventionEventRouter(bool throwOnApplyNotFound, IAggregate aggregate)
+		public ConventionEventRouter(bool throwOnApplyNotFound, Domain.IAggregate aggregate)
 			: this(throwOnApplyNotFound)
 		{
 			this.Register(aggregate);
@@ -38,7 +38,7 @@ namespace NEventStore.Domain.Core
 			this.Register(typeof(T), @event => handler((T)@event));
 		}
 
-		public virtual void Register(IAggregate aggregate)
+		public virtual void Register(Domain.IAggregate aggregate)
 		{
 			if (aggregate == null)
 			{

@@ -7,14 +7,14 @@ namespace NEventStore.Domain.Core
 	{
 		private readonly IDictionary<Type, Action<object>> handlers = new Dictionary<Type, Action<object>>();
 
-		private IAggregate regsitered;
+		private Domain.IAggregate regsitered;
 
 		public virtual void Register<T>(Action<T> handler)
 		{
 			this.handlers[typeof(T)] = @event => handler((T)@event);
 		}
 
-		public virtual void Register(IAggregate aggregate)
+		public virtual void Register(Domain.IAggregate aggregate)
 		{
 			if (aggregate == null)
 			{

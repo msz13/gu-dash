@@ -1,14 +1,14 @@
-﻿using GuDash.Competences.API.Domain.Competences;
-using GuDash.Competences.Service.Domain.Habit;
-using GuDash.Competences.Service.Domain.Learner;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
 using FluentAssertions;
 using NodaTime;
 using NodaTime.Extensions;
-using GuDash.Competences.Service.Domain.Progress;
+using GuDash.CompetencesService.Domain.Habit;
+using GuDash.CompetencesService.Domain.Learner;
+using GuDash.CompetencesService.Domain.Competences;
+using GuDash.CompetencesService.Domain.Progress;
 
 namespace CompetencesUnitTests
 {
@@ -44,9 +44,7 @@ namespace CompetencesUnitTests
             DateTimeZone tz = DateTimeZoneProviders.Tzdb["Europe/Warsaw"];
             var startActive = SystemClock.Instance.InZone(tz).GetCurrentZonedDateTime();
             var id = new ProgressId();
-            
-
-            
+                      
 
         }
 

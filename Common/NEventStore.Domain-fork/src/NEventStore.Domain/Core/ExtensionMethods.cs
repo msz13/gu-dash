@@ -9,7 +9,7 @@ namespace NEventStore.Domain.Core
 			return string.Format(CultureInfo.InvariantCulture, format ?? string.Empty, args);
 		}
 
-		public static void ThrowHandlerNotFound(this IAggregate aggregate, object eventMessage)
+		public static void ThrowHandlerNotFound(this Domain.IAggregate aggregate, object eventMessage)
 		{
 			string exceptionMessage =
 				"Aggregate of type '{0}' raised an event of type '{1}' but not handler could be found to handle the message."

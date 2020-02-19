@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>GuDash.Common</id>
+    <version>1.0.0</version>
+    <authors>msz13</authors>
+    <owners>msz13</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Package Description</description>
+    <dependencies>
+      <group targetFramework=".NETStandard2.1">
+        <dependency id="Marten" version="3.10.0" exclude="Build,Analyzers" />
+        <dependency id="NEventStore" version="7.0.0" exclude="Build,Analyzers" />
+        <dependency id="NEventStore.Persistence.MongoDB" version="7.0.0" exclude="Build,Analyzers" />
+        <dependency id="Newtonsoft.Json" version="12.0.3" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

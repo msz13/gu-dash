@@ -2,16 +2,15 @@ namespace GudAsh.Competences.CompetencesUnitTests {
 
     using System;
     using Xunit;
-    using GuDash.Competences.API.Domain.Competences;
-    using GuDash.Competences.Service.Domain.Learner;
     using System.Collections.Generic;
     using GuDash.Common.Domain.Model;
-    using GuDash.Competences.API.Domain.Competences.Events;
-    using GuDash.Competences.Service.Domain.Competences.Events;
-    using FluentAssertions;
-    using GuDash.Competences.Service.Domain.Habit;
     using GuDash.Competences.Service.Application;
-    using GuDash.Competences.Service.Domain.Competences;
+    using GuDash.CompetencesService.Domain.Competences;
+    using GuDash.CompetencesService.Domain.Learner;
+    using FluentAssertions;
+    using GuDash.CompetencesService.Domain.Habit;
+    using GuDash.CompetencesService.Domain.Competences.Events;
+    using System.Linq;
 
     public class CompetenceTestFactory
     {
@@ -20,6 +19,7 @@ namespace GudAsh.Competences.CompetencesUnitTests {
             var snapshot = new CompetenceSnapshot(
                 new CompetenceId(Guid.NewGuid()),
                 new LearnerId(Guid.NewGuid()),
+                0,
                 "Sprawnoœæ fizyczna",
                 "",
                 false,
@@ -51,20 +51,20 @@ namespace GudAsh.Competences.CompetencesUnitTests {
 
             Assert.NotNull(competence);
 
-            var events = competence.GetChanges();
-            Assert.Equal(1, events.Count);
+            var events = competence.GetUncommittedEvents();
+            Assert.Single(events.ToList());
 
-            var competenceAdded = events[0] as CompetenceAdded;
+            var competenceAdded = events.Cast<object>().ToList().FirstOrDefault() as CompetenceDefined;
             Assert.Equal(id.Id, competenceAdded.CompetenceId.Id);
             Assert.Equal(name, competenceAdded.Name);
             Assert.Equal(learner.Id, competenceAdded.LearnerId.Id);
             Assert.Equal(description, competenceAdded.Description);
 
         }
-        [Fact]
+        
         public void createFromEvents_return_Snapshot()
         {
-            var competenceAdded = new CompetenceAdded(
+            var competenceAdded = new CompetenceDefined(
                 new LearnerId(Guid.NewGuid()),
                 new CompetenceId(Guid.NewGuid()),
                 "Sprawnoœæ fizyczna",
@@ -81,6 +81,7 @@ namespace GudAsh.Competences.CompetencesUnitTests {
                 (
                 competenceAdded.CompetenceId,
                 competenceAdded.LearnerId,
+                0,
                 competenceAdded.Name,
                 competenceAdded.Description,
                 false,
@@ -88,9 +89,12 @@ namespace GudAsh.Competences.CompetencesUnitTests {
                 new List<CompetenceHabit> { }
                 );
 
-            //var competence = Competence.LoadFromEvents(eventStream, 0);
+            
 
-            var competence = Competence.LoadFromEvents(eventStream, 0);
+
+            var competence = new Competence();
+
+            competence.LoadEvents(eventStream);
 
 
             Assert.Equal(expectedSnapshot.CompetenceId, competence.GetSnapshot().CompetenceId);
@@ -99,12 +103,11 @@ namespace GudAsh.Competences.CompetencesUnitTests {
             Assert.Equal(expectedSnapshot.Name, competence.GetSnapshot().Name);
             expectedSnapshot.CompetenceHabits.Should().BeEmpty();
             Assert.Equal(0, competence.Version);
-
         }
         [Fact]
         void createFromSnaphot_return_Snapshot()
         {
-            var snapshot = new CompetenceSnapshot(new CompetenceId(Guid.NewGuid()), new LearnerId(Guid.NewGuid()), "Sprawnoœæ fizyczna", "", false, false, new List<CompetenceHabit> { });
+            var snapshot = new CompetenceSnapshot(new CompetenceId(Guid.NewGuid()), new LearnerId(Guid.NewGuid()), 0, "Sprawnoœæ fizyczna", "", false, false, new List<CompetenceHabit> { });
 
             var competence = Competence.LoadFromSnapshot(snapshot);
 
@@ -123,7 +126,7 @@ namespace GudAsh.Competences.CompetencesUnitTests {
             competence.MarkAsRequired();
 
             Assert.True(competence.IsRequired);
-            Assert.IsType<CompetenceMarkedAsRequired>(competence.GetChanges()[0]);
+            Assert.IsType<CompetenceMarkedAsRequired>(competence.GetUncommittedEvents().Cast<object>().ToList().FirstOrDefault());
 
         }
 
@@ -135,10 +138,10 @@ namespace GudAsh.Competences.CompetencesUnitTests {
             competence.MarkAsNotRequired();
 
             Assert.False(competence.IsRequired);
-            Assert.IsType<CompetenceMarkedAsNotRequired>(competence.GetChanges()[0]);
+            Assert.IsType<CompetenceMarkedAsNotRequired>(competence.GetUncommittedEvents().As<List<IDomainEvent>>()[0]);
 
             competence.MarkAsNotRequired();
-            Assert.Equal(1, competence.GetChanges().Count);
+            Assert.Single(competence.GetUncommittedEvents().ToList());
 
         }
         [Fact]
@@ -193,7 +196,7 @@ namespace GudAsh.Competences.CompetencesUnitTests {
 
             competence.HabitAdded(id, "Probny");
 
-            var expectedEvent = competence.GetChanges()[0] as CompetenceHabitAdded;
+            var expectedEvent = competence.GetUncommittedEvents().Cast<object>().ToList().FirstOrDefault()  as CompetenceHabitAdded;
             expectedEvent.Should().BeOfType<CompetenceHabitAdded>();
             expectedEvent.Name.Should().Be("Probny");
             expectedEvent.HabitId.Should().Be(id);

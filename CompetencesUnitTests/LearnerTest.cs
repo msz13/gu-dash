@@ -1,13 +1,19 @@
 ﻿using GuDash.Common.Domain.Model;
-using GuDash.Competences.API.Domain.Competences;
-using GuDash.Competences.Service.Domain.Learner;
-using GuDash.Competences.Service.Domain.Competences.Events;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Xunit;
 using System.Linq;
-using GuDash.Competences.Service.Domain.Learner.Events;
+using FluentAssertions;
+using AutoFixture;
+using GuDash.CompetencesService.Domain.Learner;
+using GuDash.CompetencesService.Domain.Learner.Events;
+using GuDash.CompetencesService.Domain.Competences.Events;
+using GuDash.CompetencesService.Domain.Competences;
+using GuDash.CompetencesService.Application.CommandHandlers;
+using CSharpFunctionalExtensions;
+using CompetencesService.Application.CommandHandlers;
+
 
 namespace CompetencesUnitTests
 {
@@ -16,57 +22,56 @@ namespace CompetencesUnitTests
         Learner LearnerFactory()
         {
             var id = new LearnerId(Guid.NewGuid());
-            var eventsStream = new List<LearnerCreated>
+            var eventsStream = new List<IDomainEvent>
             {
-                new LearnerCreated(id, "a@a.pl", "Europe/Warsaw")
+                new LearnerCreated(id, "Europe/Warsaw")
         };
-            return Learner.LoadFromEvents(eventsStream, 0);
+            var learner = new Learner();
+            learner.LoadEvents(eventsStream);
+
+            return learner;
         }
+
         [Fact]
         public void Create_From_Constructor_Return_Events()
         {
             var id = new LearnerId(Guid.NewGuid());
-            var email = "a@a.pl";
             var timezone = "Europe/Warsaw";
-            var learner = new Learner(id, email, timezone);
+            var learner = new Learner(id, timezone);
 
-            var events = learner.GetChanges();
+            var events = learner.GetUncommittedEvents();
 
-            var learnerCreated = events[0] as LearnerCreated;
-
-
-            Assert.Equal(1, events.Count);
-            Assert.Equal(id.Id, learnerCreated.LearnerId);
-            Assert.Equal(email, learnerCreated.Email);
-            Assert.Equal(timezone, learnerCreated.TimeZoneId);
-
+            events.Should().HaveCount(1).And.ContainEquivalentOf(new LearnerCreated(id, timezone));
+                     
 
         }
+
         [Fact]
         public void Create_From_Events()
         {
             var learnerEvent = new List<IDomainEvent>
             {
-                new LearnerCreated(new LearnerId(Guid.NewGuid()), "a@a.pl", "Erope/Warsaw")
+                new LearnerCreated(new LearnerId(Guid.NewGuid()), "Erope/Warsaw")
         };
 
 
-            var learner = Learner.LoadFromEvents(learnerEvent, 0);
-            Assert.Equal(0, learner.GetChanges().Count);
-            Assert.Equal(0, learner.Version);
+            var learner = new Learner();
+            learner.LoadEvents(learnerEvent);
+            learner.GetUncommittedEvents().Should().HaveCount(0);
+            learner.Version.Should().Be(1);
         }
-
+        /*
         [Fact]
         public void Create_From_Snapshot()
         {
-            var snaphot = new LearnerSnapshot(new LearnerId(Guid.NewGuid()), "Umiarkowanie", "UTC");
+            var snaphot = new LearnerSnapshot(new LearnerId(Guid.NewGuid()),  "UTC");
 
             var learner = Learner.LoadFromSnapshot(snaphot);
 
             Assert.Equal(snaphot.LearnerId, learner.GetSnapshot().LearnerId);
             Assert.Equal(snaphot.Email, learner.GetSnapshot().Email);
             Assert.Equal(snaphot.TimeZoneId, learner.GetSnapshot().TimeZoneId);
-        }
+        } */
 
         [Fact]
         public void Create_Competence()
@@ -78,76 +83,73 @@ namespace CompetencesUnitTests
             var description = "wieloraka";
             var isRequired = false;
 
-            var competence = learner.InitiateCompetence(id, name, description, isRequired);
+            var result = learner.DefineCompetence(id, name, description, isRequired);
 
-            var competenceSnapshot = competence.GetSnapshot();
+            result.IsSuccess.Should().BeTrue();
 
+            var competence = result.Value;
 
-            Assert.Equal(id, competenceSnapshot.CompetenceId);
-            Assert.Equal(name, competenceSnapshot.Name);
-            Assert.Equal(description, competenceSnapshot.Description);
-            Assert.Equal(isRequired, competenceSnapshot.IsRequired);
+            competence.GetUncommittedEvents().Should()
+                .HaveCount(1);
+                //.And
+                //.StartWith(new CompetenceDefined(learner.LearnerId, id, name, description, isRequired));            
+          
 
 
         }
 
         [Fact]
-        public void CompetenceInitiated_ValidArguments_AdsLLernerCompetence()
+        public void CompetenceInitiated_ValidArguments_AdsLernerCompetence()
         {
             var learner = LearnerFactory();
-
+            
             var competenceId = new CompetenceId(Guid.NewGuid());
 
-            var competenceCreated = new CompetenceAdded(
-                learner.GetSnapshot().LearnerId,
-                competenceId,
-                "Roztropność",
-                "",
-                false
-                );
+            
+            learner.CompetenceDefined(competenceId, "Uprzejmosc", false);
 
-            learner.CompetenceInitiated(competenceCreated.CompetenceId, competenceCreated.Name, competenceCreated.IsRequired);
+            //var snapshot = learner.GetSnapshot() as LearnerSnapshot;
 
-            var snapshot = learner.GetSnapshot();
+            var uncommittedEvents = learner.GetUncommittedEvents();
 
-            var learnerCompetenceInitiated = learner.GetChanges()[0] as LearnerCompetenceInitiated;
-
-            Assert.Single(snapshot.LearnerCompetences);
-                      
-            Assert.Equal(competenceId, learnerCompetenceInitiated.CompetenceId);
-
-            learner.CompetenceInitiated(new CompetenceId(Guid.NewGuid()), "Uprzejmość", learnerCompetenceInitiated.IsRequired);
-            Assert.Equal(2, learner.GetSnapshot().LearnerCompetences.Count);
+            uncommittedEvents.Should().HaveCount(1).And.ContainEquivalentOf(new LearnerCompetenceDefined(learner.LearnerId, competenceId, "Uprzejmosc", false));
 
 
         }
-
+        
         [Fact]
         public void When_Add_Competence_Same_Name_Throw()
         {
             var learnerId = new LearnerId(Guid.NewGuid());
             var competenceId = new CompetenceId(Guid.NewGuid());
             
-            var learnerCompetenceInitiated = new LearnerCompetenceInitiated(learnerId, competenceId,"Uprzejmość", false);
+            var learnerCompetenceDefined = new LearnerCompetenceDefined(learnerId, competenceId,"Uprzejmość", false);
 
             var eventsStream = new List<IDomainEvent>
             {
-                new LearnerCreated(learnerId, "a@a.pl", "Europe/Warsaw"),
-                learnerCompetenceInitiated
+                new LearnerCreated(learnerId, "Europe/Warsaw"),
+                learnerCompetenceDefined
             };
 
-            var learner = Learner.LoadFromEvents(eventsStream, 0);
-            Action initCompetence = ()=> learner.InitiateCompetence(learnerCompetenceInitiated.CompetenceId, learnerCompetenceInitiated.Name, "", learnerCompetenceInitiated.IsRequired);
-            Assert.Throws<LearnerErrors>(initCompetence);           
+            var learner = new Learner();
+            learner.LoadEvents(eventsStream);
+            var result = learner.DefineCompetence(learnerCompetenceDefined.CompetenceId, learnerCompetenceDefined.Name, "", learnerCompetenceDefined.IsRequired);
+
+            result.IsFailure.Should().BeTrue();
+            result.Error.Should().Be(new Error("NON_UNIQUE_COMPETENCE_NAME", "Competence with name Uprzejmość already exists"));
                                              
-        }   
+        } 
 
         [Fact]
         public void InitiateCompetence_NullName_Throws()
         {
             var learner = LearnerFactory();
 
-            learner.InitiateCompetence(new CompetenceId(Guid.NewGuid()), "They should be handled differently. For example client app request errors should be logged because for example client side validation should be improved", "", false);
+            Action action = ()=>learner.DefineCompetence(new CompetenceId(Guid.NewGuid()), "", "", false);
+
+            action.Should().Throw<InvalidOperationException>();
+
+
         }
 
         [Fact]
@@ -156,28 +158,29 @@ namespace CompetencesUnitTests
             var learnerId = new LearnerId(Guid.NewGuid());
             var competenceId = new CompetenceId(Guid.NewGuid());
 
-            var learnerCompetenceInitiated = new LearnerCompetenceInitiated(learnerId, competenceId, "Uprzejmość", false);
+            var learnerCompetenceDefined = new LearnerCompetenceDefined(learnerId, competenceId, "Uprzejmość", false);
 
             var eventsStream = new List<IDomainEvent>
             {
-                new LearnerCreated(learnerId, "a@a.pl", "Europe/Warsaw"),
-                learnerCompetenceInitiated
+                new LearnerCreated(learnerId, "Europe/Warsaw"),
+                learnerCompetenceDefined
             };
 
+
+            var learner = new Learner();
+            learner.LoadEvents(eventsStream);
+
             
-            var learner = Learner.LoadFromEvents(eventsStream, 0);
 
-            Assert.Single(learner.GetSnapshot().LearnerCompetences);
+            learner.CompetenceDefined(learnerCompetenceDefined.CompetenceId, "Fizyczna", learnerCompetenceDefined.IsRequired);
+            //Assert.Single(learner.GetSnapshot().LearnerCompetences);
 
-            learner.CompetenceInitiated(learnerCompetenceInitiated.CompetenceId, "Fizyczna", learnerCompetenceInitiated.IsRequired);
-            Assert.Single(learner.GetSnapshot().LearnerCompetences);
-
-            learner.CompetenceInitiated(new CompetenceId(Guid.NewGuid()), learnerCompetenceInitiated.Name, learnerCompetenceInitiated.IsRequired);
-            Assert.Single(learner.GetSnapshot().LearnerCompetences);
+            learner.CompetenceDefined(new CompetenceId(Guid.NewGuid()), learnerCompetenceDefined.Name, learnerCompetenceDefined.IsRequired);
+            //Assert.Single(learner.GetSnapshot().LearnerCompetences);
 
 
-            learner.CompetenceInitiated(learnerCompetenceInitiated.CompetenceId, learnerCompetenceInitiated.Name, learnerCompetenceInitiated.IsRequired);
-            Assert.Single(learner.GetSnapshot().LearnerCompetences);
+            learner.CompetenceDefined(learnerCompetenceDefined.CompetenceId, learnerCompetenceDefined.Name, learnerCompetenceDefined.IsRequired);
+            //Assert.Single(learner.GetSnapshot().LearnerCompetences);
 
         }
             
