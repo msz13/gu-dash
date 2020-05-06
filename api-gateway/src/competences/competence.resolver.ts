@@ -1,6 +1,8 @@
-import { Resolver, Query, ResolveProperty, Parent, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, ResolveProperty, Parent, Mutation, Args, Context } from '@nestjs/graphql';
 import { CompetenceService } from './competence.service';
 import { Competence, CreateCompetenceDTO, CreateCompetenceResponse } from '../graphql';
+import { MutationResponse } from '../common/util-graphql';
+import { map } from 'rxjs/operators';
 
 @Resolver('Competence')
 export class CompetenceResolver {
@@ -17,17 +19,10 @@ export class CompetenceResolver {
     }
 
     @Mutation()
-    async createCompetence(@Args('createCompetenceInput') competenceDTO: CreateCompetenceDTO){
+     createCompetence(@Args('createCompetenceInput') competenceDTO: CreateCompetenceDTO, @Context() context: any) {
        
-        const result = await this.competenceService.createAndFind(competenceDTO)
-
-        const resp = new CreateCompetenceResponse()
-
-        resp.success = true
-        resp.competence = result        
-
-        return resp
-
+        return this.competenceService.createAndGet(competenceDTO, context.userId)           
+                    
     }
 
    

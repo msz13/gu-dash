@@ -1,0 +1,5 @@
+postgresqlUsername: app
+
+postgresqlPassword: app13
+
+postgresqlDatabase: competences

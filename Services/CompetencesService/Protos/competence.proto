@@ -1,0 +1,57 @@
+syntax = "proto3";
+package competences;
+
+option csharp_namespace ="GuDash.CompetencesService.Proto";
+
+service Competences {
+    rpc DefineCompetence (DefineCompetenceRequest) returns (DefineCompetenceResponse);
+    rpc RenameCompetence (RenameCompetenceRequest) returns (RenameCompetenceResponse);
+   // rpc ChangeCompetenceDescription (ChangeCompetenceDescriptionRequest) returns (ChangeCompetenceDescriptionResponse);
+   rpc GetCompetence (GetCompetenceRequest) returns (GetCompetenceResponse);
+}
+
+message DefineCompetenceRequest {
+    string name = 1;
+    string description = 2;
+    }
+
+message DefineCompetenceResponse {
+    bool succes =1;
+    Error error =2;
+    string competenceId = 3;
+}
+
+message Error {
+    string code = 1;
+    string message = 2;
+}
+
+message GetCompetenceRequest {
+    string competenceId = 1;
+}
+
+message GetCompetenceResponse {
+    CompetenceDTO CompetenceDTO = 1;
+}
+
+message RenameCompetenceRequest {
+    string competenceId = 1;
+    string newName = 3;
+}
+
+message RenameCompetenceResponse {
+    bool succes = 1;
+    Error error = 2;
+}
+
+message CompetenceDTO {
+    string Id = 1;
+    string learnerId = 2;
+    string name = 3;
+    string description = 4;
+	bool isRequired = 5;
+	bool isActive =6;
+    int32 numberOfActiveHabits = 7;
+    int32 numberOfHoldedHabits = 8;
+    int32 numberOfDoneHabits = 9;
+}

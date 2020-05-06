@@ -1,0 +1,9 @@
+{
+  "Postgres": {
+    "Host": "manny.db.elephantsql.com",
+    "Port": "5432",
+    "Database": "ambexvwj",
+    "Username": "ambexvwj",
+    "Password": "PYJrzb2mLVb5Qh3XXA2KPNwaXNBzhc4P"
+  }
+}

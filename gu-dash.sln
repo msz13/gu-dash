@@ -6,20 +6,23 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "competences", "competences", "{400B6485-D46B-4D43-8F86-43F484DD2C50}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E714E4D3-BE67-4E33-9DB2-01D2C77DDBD1}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompetencesUnitTests", "CompetencesUnitTests\CompetencesUnitTests.csproj", "{90CEAC4A-A8A8-4C04-8153-0AF1EC8435E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompetencesUnitTests", "Services\CompetencesUnitTests\CompetencesUnitTests.csproj", "{90CEAC4A-A8A8-4C04-8153-0AF1EC8435E3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{EF28B8A4-13D7-4E0A-AE24-8C930D803067}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Services\Common\Common.csproj", "{EF28B8A4-13D7-4E0A-AE24-8C930D803067}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompetencesIntegrationTests", "CompetencesIntegrationTests\CompetencesIntegrationTests.csproj", "{517A305C-04E4-4EB5-A209-E68285118E49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompetencesIntegrationTests", "Services\CompetencesIntegrationTests\CompetencesIntegrationTests.csproj", "{517A305C-04E4-4EB5-A209-E68285118E49}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTests", "CommonTests\CommonTests.csproj", "{4BDBBF27-0A62-4A1F-86FF-1B7AA693B5BA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonTests", "Services\CommonTests\CommonTests.csproj", "{4BDBBF27-0A62-4A1F-86FF-1B7AA693B5BA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common1", "Common1", "{2CBADDC1-B04E-41FB-894E-74492A44B8E4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompetencesFunctionalTests", "CompetencesFunctionalTests\CompetencesFunctionalTests.csproj", "{6374AA90-9E2E-42A0-853A-F4A91D901150}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompetencesFunctionalTests", "Services\CompetencesFunctionalTests\CompetencesFunctionalTests.csproj", "{6374AA90-9E2E-42A0-853A-F4A91D901150}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompetencesService", "CompetencesService\CompetencesService.csproj", "{DFC01792-95DE-48E4-9C02-03DAE206B413}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CompetencesService", "Services\CompetencesService\CompetencesService.csproj", "{DFC01792-95DE-48E4-9C02-03DAE206B413}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,35 +1,30 @@
 import { ApolloError } from "apollo-server-core";
+import { MutationError } from '../graphql'
 
 export class MutationResponse {
     
-    constructor (
+    private constructor (
 
-        public succes: boolean,
+        public success: boolean,
 
-        public code: string,
-
-        public message: string,
-
-        public error?: ApolloError
+        public error?: MutationError,
 
     ) {
+     
 
     } 
+    
+    static succes<V> (value: object) {
+        const response = new this(true)
 
-    [key: string]: any
-
-    static success(code: string, message: string, payload: [string, any][]){
-        const response = new this(true, code, message)
-        payload.forEach(tuple=>{
-           return response[tuple[0]]=tuple[1]
-        } )
-
-        return response
+        return Object.assign(response, value)
 
     }
 
-    static failure(code: string, message: string, error: ApolloError){
+   
 
+    static failure(error: MutationError){
+        return new this(false, error)
     }
 
 }

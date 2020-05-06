@@ -1,0 +1,83 @@
+swagger: '2.0'
+info:
+  version: 0.0.0
+  title: Gu-Dash Competences Service
+  description: description
+  termsOfService: terms
+  contact:
+    name: .
+    url: http://a.pl
+    email: a@a.pl
+  license:
+    name: MIT
+    url: http://opensource.org/licenses/MIT
+  
+schemes: [http]
+host: competences
+basePath: /
+
+paths:
+  /habit: 
+    post:
+      summary: defines habit
+      description: defines habit
+      parameters: 
+        - name: define habit dto
+          in: body
+          schema: 
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              isrequired: 
+                type: boolean
+          
+        
+      responses:
+        201:
+          description: OK
+          headers:
+            Location: 
+              type: string
+        400: 
+          description: deuplicated name
+          schema:
+            properties:
+              code:
+                type: string
+              message: 
+                type: string
+                
+                
+securityDefinitions:
+  UserSecurity:
+    type: apiKey
+    in: header
+    name: X-AUTHENTICATED-ACCAUNT-ID
+
+security: 
+  - UserSecurity: []
+  
+              
+              
+              
+          
+            
+        
+          
+    
+ 
+    
+    
+    
+
+  
+  
+  
+  
+  
+  
+
+
+

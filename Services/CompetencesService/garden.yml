@@ -1,0 +1,12 @@
+kind: Module
+description: Competences service container
+name: competences
+type: container
+repositoryUrl: https://github.com/msz13/gu-dash/gu-dash.git
+dockerfile: CompetencesService/Dockerfile
+services:
+  - name: competences
+    ports:
+      - name: http
+        containerPort: 5000
+    

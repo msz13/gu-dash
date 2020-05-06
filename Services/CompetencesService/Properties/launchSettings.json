@@ -1,0 +1,21 @@
+{
+  "profiles": {
+    "CompetencesService": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "POSTGRES__USERNAME": "ambexvwj",
+        "POSTGRES__PASSWORD": "PYJrzb2mLVb5Qh3XXA2KPNwaXNBzhc4P",
+        "POSTGRES__HOST": "manny.db.elephantsql.com",
+        "POSTGRES__PORT": "5432",
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "POSTGRES__DATABASE": "ambexvwj"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 55000
+    }
+  }
+}

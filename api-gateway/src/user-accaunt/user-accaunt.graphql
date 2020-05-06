@@ -1,0 +1,19 @@
+type Mutation {
+    registerUser(registerUserInput: RegisterUserInput): RegisterUserResponse
+
+}
+
+type RegisterUserInput {
+    userId: ID!
+    userSettings: UserSettings
+} 
+
+type UserSettings {
+    timezone: String!
+    firstDayOfWeek: Int
+    email: String
+}
+
+type RegisterUserResponse {
+    success: Boolean
+}

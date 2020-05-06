@@ -1,6 +1,7 @@
-interface MutationResponse {
-    success: Boolean
-}
+#interface MutationResponse {
+#    success: Boolean!
+#    error: MutationError
+#}
 
 type Query {
     competences: [Competence]
@@ -10,15 +11,15 @@ type Mutation {
     createCompetence(createCompetenceInput: CreateCompetenceDTO): CreateCompetenceResponse
     
 }
-
+type MutationError {
+    code: String!
+    message: String!
+}
 
 type Competence {
 
         competenceId: ID
-
-        """
-        unique name
-        """
+                
         name: String! 
 
         description: String 
@@ -38,10 +39,11 @@ input CreateCompetenceDTO {
 
         description: String 
 
-        isRequired: Boolean!
+        isRequired: Boolean
 }
 
-type CreateCompetenceResponse implements MutationResponse {
+type CreateCompetenceResponse {
     success: Boolean
+    error: MutationError
     competence: Competence
 }

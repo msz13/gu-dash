@@ -5,8 +5,10 @@
  */
 
 /* tslint:disable */
-export interface MutationResponse {
-    success?: boolean;
+export class CreateCompetenceDTO {
+    name: string;
+    description?: string;
+    isRequired?: boolean;
 }
 
 export class Competence {
@@ -19,21 +21,38 @@ export class Competence {
     numberOfDoneGoals: number;
 }
 
-export class CreateCompetenceDTO {
-    name: string;
-    description?: string;
-    isRequired: boolean;
-}
-
-export class CreateCompetenceResponse implements MutationResponse {
+export class CreateCompetenceResponse {
     success?: boolean;
+    error?: MutationError;
     competence?: Competence;
 }
 
 export abstract class IMutation {
-    abstract createCompetence(createCompetence?: CreateCompetenceDTO): CreateCompetenceResponse | Promise<CreateCompetenceResponse>;
+    abstract createCompetence(createCompetenceInput?: CreateCompetenceDTO): CreateCompetenceResponse | Promise<CreateCompetenceResponse>;
+
+    abstract registerUser(registerUserInput?: RegisterUserInput): RegisterUserResponse | Promise<RegisterUserResponse>;
+}
+
+export class MutationError {
+    code: string;
+    message: string;
 }
 
 export abstract class IQuery {
     abstract competences(): Competence[] | Promise<Competence[]>;
+}
+
+export class RegisterUserInput {
+    userId: string;
+    userSettings?: UserSettings;
+}
+
+export class RegisterUserResponse {
+    success?: boolean;
+}
+
+export class UserSettings {
+    timezone: string;
+    firstDayOfWeek?: number;
+    email?: string;
 }

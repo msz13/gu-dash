@@ -1,0 +1,103 @@
+{
+  "consumer": {
+    "name": "CompetencesService"
+  },
+  "provider": {
+    "name": "Api-Gateway"
+  },
+  "interactions": [
+    {
+      "description": "request for creating competence",
+      "request": {
+        "method": "POST",
+        "path": "/competence",
+        "headers": {
+          "X-Authenticated-Accaunt-Id": "123"
+        },
+        "body": {
+          "name": "Uprzejmość",
+          "isRequired": true,
+          "description": "Na codzień"
+        }
+      },
+      "response": {
+        "status": 201,
+        "headers": {
+          "Location": "http://localhost:5000/competence/41209094-fb28-499e-a976-97dfa03134ad"
+        }
+      }
+    },
+    {
+      "description": "request for creating competence",
+      "providerState": "competence with name uprzejmosc",
+      "request": {
+        "method": "POST",
+        "path": "/competence",
+        "headers": {
+        },
+        "body": {
+          "name": "Uprzejmość",
+          "isRequired": true,
+          "description": ""
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+        }
+      }
+    },
+    {
+      "description": "unauthorised request",
+      "providerState": "competence with name uprzejmosc",
+      "request": {
+        "method": "POST",
+        "path": "/competence",
+        "headers": {
+          "X-Authenticated-Accaunt-Id": "123"
+        },
+        "body": {
+          "name": "uprzejmość",
+          "isRequired": true,
+          "description": ""
+        }
+      },
+      "response": {
+        "status": 400,
+        "headers": {
+        },
+        "body": {
+          "error": {
+            "code": "COMPETENCE_NON_UNIQUE_NAME",
+            "message": "Competence with name \"Uprzejmość\""
+          }
+        }
+      }
+    },
+    {
+      "description": "request for creating competence with bad input",
+      "request": {
+        "method": "POST",
+        "path": "/competence",
+        "headers": {
+          "X-Authenticated-Accaunt-Id": "123"
+        },
+        "body": {
+          "name": "",
+          "isRequired": true,
+          "description": ""
+        }
+      },
+      "response": {
+        "status": 500,
+        "headers": {
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
