@@ -24,7 +24,7 @@
     "@nestjs/common": "^6.0.0",
     "@nestjs/core": "^6.0.0",
     "@nestjs/graphql": "^6.5.3",
-    "@nestjs/platform-express": "^6.0.0",
+    "@nestjs/platform-express": "^9.2.1",
     "@pact-foundation/pact": "^9.9.12",
     "apollo-server-express": "^2.9.6",
     "d": "^1.0.1",
